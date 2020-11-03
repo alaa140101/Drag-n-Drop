@@ -49,10 +49,6 @@ function updateSavedColumns() {
 
 // Create DOM Elements for each list item
 function createItemEl(columnEl, column, item, index) {
-  // console.log('columnEl:', columnEl);
-  // console.log('column:', column);
-  // console.log('item:', item);
-  // console.log('index:', index);
   // List Item
   const listEl = document.createElement('li');
   listEl.classList.add('drag-item');
@@ -90,14 +86,35 @@ function updateDOM() {
     createItemEl(onHoldList, 0, onHoldItem, index);
   });
   // Run getSavedColumns only once, Update Local Storage
+  updatedOnLoad = true;
+  updateSavedColumns();
+}
 
-
+// Allows arrays to reflect Drag and Drop items
+function rebuildArrays() {
+    backlogListArray = [];  
+    progressListArray = [];  
+    completeListArray = [];  
+    onHoldListArray = [];  
+    for (let index = 0; index < backlogList.children.length; index++) {
+      backlogListArray.push(backlogList.children[index].textContent);
+    }
+    for (let index = 0; index < progressList.children.length; index++) {
+      progressListArray.push(progressList.children[index].textContent);
+    }
+    for (let index = 0; index < completeList.children.length; index++) {
+      completeListArray.push(completeList.children[index].textContent);
+    }
+    for (let index = 0; index < onHoldList.children.length; index++) {
+      onHoldListArray.push(onHoldList.children[index].textContent);
+    }
+    updateDOM();
 }
 
 // When Item Starts Dragging
 function drag(e) {
   draggedItem = e.target;
-  console.log('draggedItem:' , draggedItem);
+  //console.log('draggedItem:' , draggedItem);
 }
 
 // Column Allows for Item to Drop
@@ -121,6 +138,7 @@ function drop(e) {
   // Add Item to Column
   const parent = listColumns[currentColumn];
   parent.appendChild(draggedItem);
+  rebuildArrays();
 }
 
 // On load
